@@ -42,6 +42,7 @@ func configureTimezone(engine *xorm.Engine) {
 	engine.SetTZLocation(loc)
 	engine.SetTZDatabase(loc)
 }
+
 func Ping() error {
 	return engine.Ping()
 }
@@ -63,7 +64,6 @@ func InitSocketConnectionPool() error {
 
 	// configure settings
 	configureConnectionPool(engine)
-	configureLogger(engine)
 	configureTimezone(engine)
 	return nil
 }

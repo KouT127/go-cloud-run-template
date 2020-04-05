@@ -9,7 +9,12 @@ import (
 	"os"
 )
 
+const ReleaseMode = "Release"
+
+var releaseMode string
+
 func main() {
+	releaseMode = os.Getenv("RELEASE_MODE")
 	initDatabase()
 	initRouter()
 }
@@ -26,12 +31,16 @@ func initDatabase() {
 		if err != nil {
 			log.Fatalf("Tcp connection is unavailable")
 		}
-
 	}
 }
 
 func initRouter() {
 	r := gin.Default()
+
+	if releaseMode == ReleaseMode {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
