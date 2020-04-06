@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/KouT127/go-cloud-run/database"
+	"github.com/KouT127/go-cloud-run/logger"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
@@ -15,23 +16,8 @@ var releaseMode string
 
 func main() {
 	releaseMode = os.Getenv("RELEASE_MODE")
-	initDatabase()
+	database.InitDatabase()
 	initRouter()
-}
-
-func initDatabase() {
-	dbHost := os.Getenv("DB_TCP_HOST")
-	if dbHost == "" {
-		err := database.InitSocketConnectionPool()
-		if err != nil {
-			log.Fatalf("Socket connection is unavailable")
-		}
-	} else {
-		err := database.InitTcpConnectionPool()
-		if err != nil {
-			log.Fatalf("Tcp connection is unavailable")
-		}
-	}
 }
 
 func initRouter() {
@@ -51,6 +37,7 @@ func initRouter() {
 	config.AllowMethods = []string{"OPTION", "GET", "POST", "PUT", "DELETE"}
 	config.AllowOrigins = []string{"*"}
 	config.AllowHeaders = []string{"*"}
+	r.Use(cors.New(config))
 
 	v1 := r.Group("/v1")
 	v1.Handle("GET", "/", func(c *gin.Context) {
@@ -64,6 +51,5 @@ func initRouter() {
 		c.JSON(http.StatusOK, gin.H{"message": "ok"})
 	})
 
-	r.Use(cors.New(config))
-	log.Fatal(r.Run(":" + port))
+	logger.Error(r.Run(":" + port))
 }

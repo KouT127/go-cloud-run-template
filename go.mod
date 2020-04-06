@@ -3,8 +3,8 @@ module github.com/KouT127/go-cloud-run
 go 1.13
 
 require (
-	cloud.google.com/go v0.56.0 // indirect
-	cloud.google.com/go/logging v1.0.0 // indirect
+	cloud.google.com/go v0.56.0
+	cloud.google.com/go/logging v1.0.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-gonic/gin v1.6.2
 	github.com/go-sql-driver/mysql v1.4.1

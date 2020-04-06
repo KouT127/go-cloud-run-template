@@ -47,7 +47,22 @@ func Ping() error {
 	return engine.Ping()
 }
 
-func InitSocketConnectionPool() error {
+func InitDatabase() {
+	dbHost := os.Getenv("DB_TCP_HOST")
+	if dbHost == "" {
+		err := initSocketConnectionPool()
+		if err != nil {
+			log.Fatalf("Socket connection is unavailable")
+		}
+	} else {
+		err := initTcpConnectionPool()
+		if err != nil {
+			log.Fatalf("Tcp connection is unavailable")
+		}
+	}
+}
+
+func initSocketConnectionPool() error {
 	var (
 		err                    error
 		dbUser                 = mustGetenv("DB_USER")
@@ -68,7 +83,7 @@ func InitSocketConnectionPool() error {
 	return nil
 }
 
-func InitTcpConnectionPool() error {
+func initTcpConnectionPool() error {
 	var (
 		err       error
 		dbUser    = mustGetenv("DB_USER")
